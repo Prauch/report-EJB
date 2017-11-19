@@ -1,0 +1,31 @@
+1. 	There are four projects altogether:
+	a)	Lab2-EAR - the container project for ejb and client modules. Contains sun-resources.xml file 
+		configuring the JDBC connection pool and JDBC data source. There should be NO need to create them 
+		manually using Glassfish administration console. However, if the resources are not found automatically,
+		please make sure there is a jdbc/lab JDBC resource and a lab_pool JDBC Connection Pool created on the server.
+		
+		To do so, after starting Glassfish go to http://localhost:4848. Then under Resources find JDBC, then go to 
+		JDBC Connection Pools and click New. Specify Pool Name (lab_pool), Resource Type (javax.sql.XADataSource)
+		and Database Driver Vendor (MySql). Click Next, and in the list of Properties (at the bottom),
+		find and set URL (jdbc:mysql://localhost:3306/lab?zeroDateTimeBehavior=convertToNull), Password (lab) and User (lab).
+		Click Finish.
+		Then go to JDBC Resources, click New, specify JNDI name (jdbc/lab) and Pool Name (lab_pool). Click Save.
+		
+	b)	Lab2-EAR-ejb - EJB module, here you put your session beans (stateless, with remote user interface).
+		This project should reference Lab2-EAR-console.jar directly (not as a project).
+	c)	Lab2-EAR-client - Application Client module, here you put your controller and view part. Do NOT run this
+		project explicitly. This project should reference Lab2-EAR-console project.
+	d)	Lab2-EAR-console - here you put your @Remote session bean interface and entity classes. They will issue 
+		a warning about missing persistence unit which you can safely ignore.
+
+2.  The project assumes that lab database with lab, lab credentials is available, as in the previous project.
+
+3.  In persistence.xml file add your entity classes using <class>fully.qualified.name.of.the.Class</class>. 
+	It uses JTA transactions, so you should NOT use em.getTransaction().begin() and em.getTransaction().commit().
+	Also, do NOT create EntityManager manually, instead use the following piece of code in your EJB(s):
+	
+	@PersistenceContext
+	private EntityManager em;
+
+4.  Follow the package naming convention proposed in the previous report, which means you should include your 
+	last name and first name in the package name.
